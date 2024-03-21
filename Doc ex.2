@@ -1,49 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-void generate_lotto_numbers(int n) {
-    FILE *fp;
-    fp = fopen("lotto.txt", "w");
-
-
-    srand(1); 
-
-    fprintf(fp, "========= lotto649 =========\n");
-    for (int i = 1; i <= n; ++i) {
-        fprintf(fp, "[%d]: ", i);
-
-        int lotto[7]; 
-        for (int j = 0; j < 7; ++j) {
-            lotto[j] = rand() % 69 + 1;
-            fprintf(fp, "%02d ", lotto[j]);
-            if (j != 6) {
-            }
+int main()
+{
+    int input=0, seed = 1;
+    time_t Time, curtime;
+    time(&curtime);
+    Time = time(NULL);
+    seed = Time%10;
+    FILE* file;
+    
+    
+    srand(seed);
+    printf("請輸入你要購買的樂透彩數量：");
+    scanf("%d", &input);
+    
+    printf("你購買的%d組特透號碼儲存至lotto.txt\n", input);
+    
+    
+    file = fopen("lotto.txt", "w+");
+    
+    char *arr_time = ctime(&curtime);
+    fwrite(arr_time, sizeof(char), 30, file);
+    
+    for(int i=0; i<input; i++){
+        fwrite("\n", sizeof(char), 2, file);
+        for(int j=0; j<7; j++){
+            int num = rand()%70;
+            //printf("%d ", num);
+            char arr_write[3] = {(num/10)+48,(num%10)+48, 0};
+            fwrite(arr_write, sizeof(char), 3, file);
         }
-
-        fprintf(fp, "\n");
+        //printf("\n");
     }
-
-    for (int i = n + 1; i <= 5; ++i) {
-        fprintf(fp, "[%d]: __ __ __ __ __ __ __\n", i);
-    }
-
-    fprintf(fp, "========= csie@CGU =========\n");
-
-    fclose(fp);
-}
-
-int main() {
-    int n;
-   
-    scanf("%d", &m);
-
-    if (m < 1 || m > 5) {
-        
-        return 1;
-    }
-
-    generate_lotto_numbers(m);
-
-
+    fclose(file);
     return 0;
 }
